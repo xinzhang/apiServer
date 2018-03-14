@@ -1,0 +1,50 @@
+version: "3.1"
+
+services:
+  web:
+    container_name: assetapi-prod-web
+    image: docker-dtr.essentialenergy.services:8445/essentialenergy/assetapi:web-prod-0.0.12
+    build:
+      context: .
+      dockerfile: web.dockerfile
+    deploy:
+      mode: replicated
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 60s
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.role == worker
+          - node.labels.usage.prod == true
+      labels:
+        # Use HTTP Routing Mesh (HRM) to setup hostname routing and force redirect http to https
+        - com.docker.ucp.mesh.http.1=external_route=http://assets.essentialenergy.services,redirect=https://assets.essentialenergy.services
+        - com.docker.ucp.mesh.http.443=external_route=sni://assets.essentialenergy.services,internal_port=3001
+        - com.docker.ucp.access.owner=Development Team
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+    ports:
+      - 3001
+    networks:
+      # Join this server to the HRM network so it can be access externally
+      - ucp-hrm
+    secrets:
+      - services-tls-crt
+      - services-tls-key
+    command: npm run start:prod
+
+networks:
+  ucp-hrm:
+    external:
+      name: ucp-hrm
+
+# Non-dev tls certs are managed within UCP by admin, so not stored in source control!
+secrets:
+  services-tls-crt:
+    external: true
+  services-tls-key:
+    external: true

@@ -1,0 +1,28 @@
+version: "3.1"
+
+services:
+  web:
+    container_name: myradioapi-web-dev
+    image: gcr.io/test-triplem-baas/myradioapi:web-dev-0.0.1
+    build:
+      context: .
+      dockerfile: web.dockerfile
+    environment:
+      - NODE_ENV=development
+      - DEBUG_PORT=5858
+      - PORT=8080
+    ports:
+      - 8080:8080
+      - 5858:5858
+    # map container app source to ours.
+    # Map node_modules to host api-deps folder, this is so we can run npm install from host for linting etc. and the
+    # modules will be built for host os not linux built node_modules from container
+    volumes:
+      - api-deps:/var/app/node_modules
+      - .:/var/app
+
+    command: npm run start:dev
+    tty: true
+
+volumes:
+  api-deps:

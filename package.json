@@ -1,0 +1,44 @@
+{
+  "name": "sca.myradio.api",
+  "version": "1.0.0",
+  "description": "SCA MyRadio API",
+  "main": "index.js",
+  "author": "Digial",
+  "license": "MIT",
+  "scripts": {
+    "babel-node": "babel-node --inspect",
+    "start:dev": "nodemon --ignore 'public/docs/**' --exec npm run babel-node -- ./server/index.js",
+    "start:dist": "node dist/index.js",
+    "build:dist": "babel server -d dist --ignore '**/*.spec.js'",
+    "test": "mocha --compilers js:babel-register --recursive ./server/**/*.spec.js",
+    "lint": "eslint .",
+    "apidoc": "apidoc -i server -o ./public/docs/api"
+  },
+  "dependencies": {
+    "firebase": "^4.11.0",
+    "formidable": "^1.2.0",
+    "moment": "^2.21.0",
+    "nodemailer": "^4.6.2",
+    "redis": "^2.8.0",
+    "restify": "^6.3.4",
+    "restify-cors-middleware": "^1.1.0"
+  },
+  "devDependencies": {
+    "apidoc": "^0.17.6",
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "chai": "^4.1.2",
+    "eslint": "^4.18.2",
+    "eslint-plugin-import": "^2.9.0",
+    "eslint-watch": "^3.1.3",
+    "mocha": "^5.0.4",
+    "nodemon": "^1.17.2",
+    "supertest": "^3.0.0"
+  },
+  "babel": {
+    "presets": [
+      "env"
+    ]
+  },
+  "apidoc": {}
+}
