@@ -15,8 +15,6 @@ export default function(server) {
 	 *
 	 * @apiDescription This endpoint retrieves the stations list by lat lng
 	 *
-	 * @apiHeader {GUID}    key API key
-	 *
 	 * @apiParam {lat} latitude
    * @apiParam {lng} longitude
 	 *
